@@ -69,3 +69,30 @@ app.put('/expenses/:id', (req, res) => {
 app.listen(5000, () => {
     console.log("🚀 Server running on port 5000");
 });
+
+app.get('/expenses/category-summary', (req, res) => {
+    const sql = `
+        SELECT category, SUM(amount) AS total
+        FROM expenses
+        GROUP BY category
+    `;
+
+    db.query(sql, (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json(result);
+    });
+});
+
+app.get('/expenses/monthly-summary', (req, res) => {
+    const sql = `
+        SELECT DATE_FORMAT(date, '%Y-%m') AS month, SUM(amount) AS total
+        FROM expenses
+        GROUP BY month
+        ORDER BY month
+    `;
+
+    db.query(sql, (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json(result);
+    });
+});

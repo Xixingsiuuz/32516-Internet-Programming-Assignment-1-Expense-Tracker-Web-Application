@@ -24,6 +24,11 @@ function App() {
                           "Other"        // 其他零碎开支
                           ];
 
+  const [categorySummary, setCategorySummary] = useState([]);
+  const [monthlySummary, setMonthlySummary] = useState([]);
+
+
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -45,6 +50,7 @@ function App() {
     axios.post('http://localhost:5000/expenses', form)
       .then(() => {
         if (showExpenses) fetchExpenses();
+        fetchSummary();
         setForm({ title: '', category: '', amount: '', date: '', description: '' });
       })
       .catch(err => console.error(err));
@@ -54,6 +60,7 @@ function App() {
     axios.put(`http://localhost:5000/expenses/${editingId}`, form)
       .then(() => {
         if (showExpenses) fetchExpenses();
+        fetchSummary();
         setForm({ title: '', category: '', amount: '', date: '', description: '' });
         setEditingId(null);
       })
@@ -67,7 +74,10 @@ function App() {
 
   const deleteExpense = (id) => {
     axios.delete(`http://localhost:5000/expenses/${id}`)
-      .then(() => setExpenses(prev => prev.filter(item => item.id !== id)))
+      .then(() => {
+        setExpenses(prev => prev.filter(item => item.id !== id))
+        fetchSummary();
+      })
       .catch(err => console.error(err));
   };
 
@@ -76,6 +86,19 @@ function App() {
     if (!showExpenses) fetchExpenses(); // 只有当要显示时才请求数据
     setShowExpenses(prev => !prev);
   };
+
+  const fetchSummary = () => {
+  axios.get('http://localhost:5000/expenses/category-summary')
+    .then(res => setCategorySummary(res.data));
+
+  axios.get('http://localhost:5000/expenses/monthly-summary')
+    .then(res => setMonthlySummary(res.data));
+  };
+
+  useEffect(() => {
+  fetchExpenses();
+  fetchSummary();
+  }, []);
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', fontFamily: 'Arial, sans-serif' }}>
@@ -118,6 +141,20 @@ function App() {
       >
         {showExpenses ? 'Hide Expenses' : 'Show Expenses'}
       </button>
+
+      <h2>Category Summary</h2>
+      {categorySummary.map(item => (
+        <div key={item.category}>
+          {item.category}: ${item.total}
+        </div>
+      ))}
+
+      <h2>Monthly Summary</h2>
+      {monthlySummary.map(item => (
+        <div key={item.month}>
+          {item.month}: ${item.total}
+        </div>
+      ))}
 
       {/* 数据列表 */}
       {showExpenses && (
