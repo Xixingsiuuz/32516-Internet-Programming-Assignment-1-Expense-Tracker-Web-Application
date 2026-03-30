@@ -35,3 +35,6 @@ expense-tracker/
 ## 5. Challenges Overcome
 One of the main challenges in this project was connecting the React frontend to the Node.js backend and ensuring the API requests worked correctly. Another difficulty was configuring the MySQL database connection and testing CRUD operations without errors. I also encountered issues with updating the page state after deleting or editing records, because the UI did not always refresh immediately. This problem was solved by improving the React state update logic and separating add mode from edit mode. Through this process, I gained a better understanding of full-stack web development and how frontend, backend, and database components work together.
 
+## 6. GitHub Page
+https://github.com/Xixingsiuuz/32516-Internet-Programming-Assignment-1-Expense-Tracker-Web-Application
+
