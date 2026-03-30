@@ -11,17 +11,17 @@ function App() {
     description: ''
   });
   const [editingId, setEditingId] = useState(null); 
-  const [showExpenses, setShowExpenses] = useState(false); // 控制列表显示
+  const [showExpenses, setShowExpenses] = useState(false); // Control category list show
   const categoryOptions = [
-                          "Bill",        // 水电煤、网费、电话费
-                          "Food",        // 吃饭、外卖、零食
-                          "Rent",        // 房租
-                          "Transport",   // 交通、油费、地铁、公交
-                          "Entertainment", // 电影、游戏、运动、兴趣爱好
-                          "Shopping",    // 衣物、生活用品
-                          "Healthcare",  // 医疗、药品
-                          "Education",   // 学费、培训、书籍
-                          "Other"        // 其他零碎开支
+                          "Bill",        
+                          "Food",        
+                          "Rent",        
+                          "Transport",   
+                          "Entertainment", 
+                          "Shopping",    
+                          "Healthcare",  
+                          "Education",   
+                          "Other"        
                           ];
 
   const [categorySummary, setCategorySummary] = useState([]);
@@ -81,9 +81,8 @@ function App() {
       .catch(err => console.error(err));
   };
 
-  // 点击查询按钮
   const toggleShowExpenses = () => {
-    if (!showExpenses) fetchExpenses(); // 只有当要显示时才请求数据
+    if (!showExpenses) fetchExpenses(); 
     setShowExpenses(prev => !prev);
   };
 
@@ -101,97 +100,194 @@ function App() {
   }, []);
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Expense Tracker</h1>
+  <div
+    style={{
+      padding: '30px 40px',
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#f9f9fb',
+      minHeight: '100vh'
+    }}
+  >
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '40px',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}
+    >
+      {/* Left zone */}
+      <div style={{ flex: 2 }}>
+        <h1 style={{ marginBottom: '20px' }}>Expense Tracker</h1>
 
-      {editingId && <p style={{ color: 'blue', fontWeight: 'bold' }}>Editing record #{editingId}</p>}
+        {editingId && (
+          <p style={{ color: 'blue', fontWeight: 'bold' }}>
+            Editing record #{editingId}
+          </p>
+        )}
 
-      <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <input name="title" placeholder="Title" value={form.title} onChange={handleChange} />
-        <select name="category" value={form.category} onChange={handleChange}>
-          <option value="">Category</option>
-          {categoryOptions.map(opt => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
-        <input name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} />
-        <input name="date" type="date" value={form.date} onChange={handleChange} />
-        <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+        <div
+          style={{
+            marginBottom: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+          }}
+        >
+          <input name="title" placeholder="Title" value={form.title} onChange={handleChange} />
+          
+          <select name="category" value={form.category} onChange={handleChange}>
+            <option value="">Category</option>
+            {categoryOptions.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
 
-        {!editingId ? (
-          <button style={{ backgroundColor: 'green', color: 'white', padding: '8px' }} onClick={addExpense}>
-            Add
-          </button>
-        ) : (
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button style={{ backgroundColor: 'blue', color: 'white', padding: '8px' }} onClick={saveExpense}>
-              Save
+          <input name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} />
+          <input name="date" type="date" value={form.date} onChange={handleChange} />
+          <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
+
+          {!editingId ? (
+            <button
+              style={{ backgroundColor: 'green', color: 'white', padding: '10px', border: 'none', borderRadius: '6px' }}
+              onClick={addExpense}
+            >
+              Add
             </button>
-            <button style={{ backgroundColor: 'gray', color: 'white', padding: '8px' }} onClick={cancelEdit}>
-              Cancel
-            </button>
-          </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                style={{ backgroundColor: 'blue', color: 'white', padding: '10px', border: 'none', borderRadius: '6px' }}
+                onClick={saveExpense}
+              >
+                Save
+              </button>
+              <button
+                style={{ backgroundColor: 'gray', color: 'white', padding: '10px', border: 'none', borderRadius: '6px' }}
+                onClick={cancelEdit}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+
+        <button
+          style={{
+            backgroundColor: showExpenses ? '#555' : '#aa3bff',
+            color: 'white',
+            padding: '10px 14px',
+            marginBottom: '20px',
+            border: 'none',
+            borderRadius: '6px'
+          }}
+          onClick={toggleShowExpenses}
+        >
+          {showExpenses ? 'Hide Expenses' : 'Show Expenses'}
+        </button>
+
+        {showExpenses && (
+          expenses.length === 0 ? (
+            <p>No data</p>
+          ) : (
+            expenses.map(item => (
+              <div
+                key={item.id}
+                style={{
+                  border: '1px solid #ddd',
+                  marginBottom: '12px',
+                  padding: '15px',
+                  borderRadius: '10px',
+                  backgroundColor: 'white',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.05)'
+                }}
+              >
+                <h3>{item.title}</h3>
+                <p>Category: {item.category}</p>
+                <p>Amount: ${item.amount}</p>
+                <p>Date: {item.date}</p>
+                <p>Description: {item.description}</p>
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    style={{ backgroundColor: 'red', color: 'white', padding: '6px 10px', border: 'none', borderRadius: '6px' }}
+                    onClick={() => deleteExpense(item.id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    style={{ backgroundColor: 'orange', color: 'white', padding: '6px 10px', border: 'none', borderRadius: '6px' }}
+                    onClick={() => {
+                      setEditingId(item.id);
+                      setForm({
+                        title: item.title,
+                        category: item.category,
+                        amount: item.amount,
+                        date: item.date,
+                        description: item.description
+                      });
+                    }}
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+            ))
+          )
         )}
       </div>
 
-      {/* 查询按钮 */}
-      <button
-        style={{ backgroundColor: showExpenses ? '#555' : '#aa3bff', color: 'white', padding: '8px', marginBottom: '20px' }}
-        onClick={toggleShowExpenses}
-      >
-        {showExpenses ? 'Hide Expenses' : 'Show Expenses'}
-      </button>
-
-      <h2>Category Summary</h2>
-      {categorySummary.map(item => (
-        <div key={item.category}>
-          {item.category}: ${item.total}
-        </div>
-      ))}
-
-      <h2>Monthly Summary</h2>
-      {monthlySummary.map(item => (
-        <div key={item.month}>
-          {item.month}: ${item.total}
-        </div>
-      ))}
-
-      {/* 数据列表 */}
-      {showExpenses && (
-        expenses.length === 0 ? (
-          <p>No data</p>
-        ) : (
-          expenses.map(item => (
-            <div key={item.id} style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', borderRadius: '5px' }}>
-              <h3>{item.title}</h3>
-              <p>Category: {item.category}</p>
-              <p>Amount: ${item.amount}</p>
-              <p>Date: {item.date}</p>
-              <p>Description: {item.description}</p>
-
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button style={{ backgroundColor: 'red', color: 'white', padding: '4px 8px' }} onClick={() => deleteExpense(item.id)}>
-                  Delete
-                </button>
-                <button style={{ backgroundColor: 'orange', color: 'white', padding: '4px 8px' }} onClick={() => {
-                  setEditingId(item.id);
-                  setForm({
-                    title: item.title,
-                    category: item.category,
-                    amount: item.amount,
-                    date: item.date,
-                    description: item.description
-                  });
-                }}>
-                  Edit
-                </button>
+      {/* Summary zone */}
+      <div style={{ flex: 1, minWidth: '260px' }}>
+        <div
+          style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            marginBottom: '20px'
+          }}
+        >
+          <h2 style={{ marginTop: 0 }}>Category Summary</h2>
+          {categorySummary.length === 0 ? (
+            <p>No category data</p>
+          ) : (
+            categorySummary.map(item => (
+              <div key={item.category} style={{ marginBottom: '8px' }}>
+                {item.category}: ${item.total}
               </div>
-            </div>
-          ))
-        )
-      )}
+            ))
+          )}
+        </div>
+
+        <div
+          style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+          }}
+        >
+          <h2 style={{ marginTop: 0 }}>Monthly Summary</h2>
+          {monthlySummary.length === 0 ? (
+            <p>No monthly data</p>
+          ) : (
+            monthlySummary.map(item => (
+              <div key={item.month} style={{ marginBottom: '8px' }}>
+                {item.month}: ${item.total}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;

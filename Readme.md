@@ -20,6 +20,7 @@ This project is a single-page Expense Tracker web application that helps users r
 - Input fields for title, category, amount, date, and description
 - Edit mode with Save and Cancel options
 - Real-time update of the expense list after CRUD operations
+- View expense items / total amounts by category, and trends in monthly expenditure.
 
 ## 4. Folder Structure
 ``` id="1l1tzb" 

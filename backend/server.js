@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ⚡ 连接 MySQL
+// Connect to MySQL
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -22,7 +22,7 @@ db.connect(err => {
     }
 });
 
-// 📡 获取所有数据
+// Query all data
 app.get('/expenses', (req, res) => {
     db.query('SELECT * FROM expenses', (err, result) => {
         if (err) return res.status(500).send(err);
@@ -30,7 +30,7 @@ app.get('/expenses', (req, res) => {
     });
 });
 
-// ➕ 添加新数据
+// Add new data
 app.post('/expenses', (req, res) => {
     const { title, category, amount, date, description } = req.body;
     const sql = 'INSERT INTO expenses (title, category, amount, date, description) VALUES (?, ?, ?, ?, ?)';
@@ -40,7 +40,7 @@ app.post('/expenses', (req, res) => {
     });
 });
 
-// 🗑 删除数据
+// Delete the data
 app.delete('/expenses/:id', (req, res) => {
     const id = req.params.id;
     db.query('DELETE FROM expenses WHERE id=?', [id], (err, result) => {
@@ -49,6 +49,7 @@ app.delete('/expenses/:id', (req, res) => {
     });
 });
 
+// Update new data
 app.put('/expenses/:id', (req, res) => {
     const id = req.params.id;
     const { title, category, amount, date, description } = req.body;
@@ -65,7 +66,7 @@ app.put('/expenses/:id', (req, res) => {
     });
 });
 
-// 🚀 启动服务器
+// Luanch the server
 app.listen(5000, () => {
     console.log("🚀 Server running on port 5000");
 });
